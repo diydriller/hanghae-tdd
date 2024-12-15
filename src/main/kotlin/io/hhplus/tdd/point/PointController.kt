@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point
 
 import io.hhplus.tdd.point.dto.ChargePointRequest
+import io.hhplus.tdd.point.dto.UsePointRequest
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import org.slf4j.Logger
@@ -19,7 +20,7 @@ class PointController(
      */
     @GetMapping("{id}")
     fun point(
-        @PathVariable id: Long,
+        @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
     ): UserPoint {
         return pointService.getUserPoint(id)
     }
@@ -29,7 +30,7 @@ class PointController(
      */
     @GetMapping("{id}/histories")
     fun history(
-        @PathVariable id: Long,
+        @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
     ): List<PointHistory> {
         return pointService.getUserPointHistory(id)
     }
@@ -50,9 +51,9 @@ class PointController(
      */
     @PatchMapping("{id}/use")
     fun use(
-        @PathVariable id: Long,
-        @RequestBody amount: Long,
+        @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
+        @RequestBody @Valid request: UsePointRequest,
     ): UserPoint {
-        return UserPoint(0, 0, 0)
+        return pointService.useUserPoint(id, request.amount)
     }
 }

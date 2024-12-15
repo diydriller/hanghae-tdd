@@ -2,6 +2,7 @@ package io.hhplus.tdd.point
 
 import io.hhplus.tdd.database.PointHistoryTable
 import io.hhplus.tdd.database.UserPointTable
+import io.hhplus.tdd.exception.ExceptionStatus
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,5 +21,13 @@ class PointService(
     fun chargeUserPoint(userId: Long, amount: Long): UserPoint {
         val userPoint = userPointTable.selectById(userId)
         return userPointTable.insertOrUpdate(userPoint.id, userPoint.point + amount)
+    }
+
+    fun useUserPoint(userId: Long, amount: Long): UserPoint {
+        val userPoint = userPointTable.selectById(userId)
+        if (userPoint.point < amount) {
+            throw RuntimeException(ExceptionStatus.NOT_ENOUGH_BALANCE.value)
+        }
+        return userPointTable.insertOrUpdate(userPoint.id, userPoint.point - amount)
     }
 }
