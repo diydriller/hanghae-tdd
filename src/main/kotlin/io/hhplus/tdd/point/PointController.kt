@@ -1,5 +1,8 @@
 package io.hhplus.tdd.point
 
+import io.hhplus.tdd.point.dto.ChargePointRequest
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Min
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
@@ -36,10 +39,10 @@ class PointController(
      */
     @PatchMapping("{id}/charge")
     fun charge(
-        @PathVariable id: Long,
-        @RequestBody amount: Long,
+        @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
+        @RequestBody @Valid request: ChargePointRequest,
     ): UserPoint {
-        return UserPoint(0, 0, 0)
+        return pointService.chargeUserPoint(id, request.amount)
     }
 
     /**
