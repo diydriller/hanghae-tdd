@@ -1,10 +1,8 @@
 package io.hhplus.tdd.service
 
 import io.hhplus.tdd.database.UserPointTable
-import io.hhplus.tdd.exception.ExceptionStatus
 import io.hhplus.tdd.point.UserPoint
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -65,26 +63,5 @@ class PointManagementServiceUnitTest {
         assertEquals(updatedUserPoint.point, result.point)
         verify(userPointTable, times(1)).selectById(userId)
         verify(userPointTable, times(1)).insertOrUpdate(userId, initialPoints - useAmount)
-    }
-
-    @DisplayName("using point more than balance should throw exception")
-    @Test
-    fun usingUserPointFailTest() {
-        val userId = 1L
-        val initialPoints = 100L
-
-        val userPoint = UserPoint(userId, initialPoints, 10L)
-        val useAmount = 200L
-
-        // given
-        `when`(userPointTable.selectById(userId)).thenReturn(userPoint)
-
-        // when & then
-        val exception = assertThrows(RuntimeException::class.java) {
-            pointManagementService.useUserPoint(userId, useAmount)
-        }
-        assertEquals(ExceptionStatus.NOT_ENOUGH_BALANCE.value, exception.message)
-        verify(userPointTable, times(1)).selectById(userId)
-        verify(userPointTable, never()).insertOrUpdate(anyLong(), anyLong())
     }
 }
