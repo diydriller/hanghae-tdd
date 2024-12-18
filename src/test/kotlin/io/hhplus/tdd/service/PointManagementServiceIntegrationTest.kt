@@ -1,4 +1,4 @@
-package io.hhplus.tdd.point
+package io.hhplus.tdd.service
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -9,21 +9,21 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 @SpringBootTest
-class PointServiceIntegrationTest {
+class PointManagementServiceIntegrationTest {
     @Autowired
-    private lateinit var pointService: PointService
+    private lateinit var pointManagementService: PointManagementService
 
     @Test
     @DisplayName("synchronization integration test for charging user point")
     fun chargeUserPointSynchronizeTest() {
         val userId = 1L
-        pointService.chargeUserPoint(userId, 0L)
+        pointManagementService.chargeUserPoint(userId, 0L)
 
         runConcurrentTest(threadCount = 10, taskCount = 100) {
-            pointService.chargeUserPoint(userId, 10)
+            pointManagementService.chargeUserPoint(userId, 10)
         }
 
-        val finalPoint = pointService.getUserPoint(userId)
+        val finalPoint = pointManagementService.getUserPoint(userId)
         assertEquals(1000, finalPoint.point)
     }
 
@@ -31,13 +31,13 @@ class PointServiceIntegrationTest {
     @DisplayName("synchronization integration test for using user point")
     fun useUserPointSynchronizeTest() {
         val userId = 2L
-        pointService.chargeUserPoint(userId, 2000L)
+        pointManagementService.chargeUserPoint(userId, 2000L)
 
         runConcurrentTest(threadCount = 10, taskCount = 100) {
-            pointService.useUserPoint(userId, 10)
+            pointManagementService.useUserPoint(userId, 10)
         }
 
-        val finalPoint = pointService.getUserPoint(userId)
+        val finalPoint = pointManagementService.getUserPoint(userId)
         assertEquals(1000, finalPoint.point)
     }
 
@@ -45,16 +45,16 @@ class PointServiceIntegrationTest {
     @DisplayName("synchronization integration test for charging and using user point")
     fun chargeAndUseUserPointSynchronizeTest() {
         val userId = 3L
-        pointService.chargeUserPoint(userId, 2000L)
+        pointManagementService.chargeUserPoint(userId, 2000L)
 
         runConcurrentTest(threadCount = 10, taskCount = 100) {
-            pointService.chargeUserPoint(userId, 10)
+            pointManagementService.chargeUserPoint(userId, 10)
         }
         runConcurrentTest(threadCount = 10, taskCount = 100) {
-            pointService.useUserPoint(userId, 20)
+            pointManagementService.useUserPoint(userId, 20)
         }
 
-        val finalPoint = pointService.getUserPoint(userId)
+        val finalPoint = pointManagementService.getUserPoint(userId)
         assertEquals(1000, finalPoint.point)
     }
 

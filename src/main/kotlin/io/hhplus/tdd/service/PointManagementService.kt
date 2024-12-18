@@ -1,22 +1,18 @@
-package io.hhplus.tdd.point
+package io.hhplus.tdd.service
 
-import io.hhplus.tdd.database.PointHistoryTable
 import io.hhplus.tdd.database.UserPointTable
 import io.hhplus.tdd.exception.ExceptionStatus
 import io.hhplus.tdd.lock.SynchronizeWithKey
+import io.hhplus.tdd.point.UserPoint
 import org.springframework.stereotype.Service
 
 @Service
-class PointService(
+class PointManagementService(
     private val userPointTable: UserPointTable,
-    private val pointHistoryTable: PointHistoryTable
-) {
+
+    ) {
     fun getUserPoint(userId: Long): UserPoint {
         return userPointTable.selectById(userId)
-    }
-
-    fun getUserPointHistory(userId: Long): List<PointHistory> {
-        return pointHistoryTable.selectAllByUserId(userId)
     }
 
     @SynchronizeWithKey(key = "user-#{#userId}-transaction")

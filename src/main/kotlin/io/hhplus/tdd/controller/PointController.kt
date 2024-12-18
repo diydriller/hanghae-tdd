@@ -1,7 +1,11 @@
-package io.hhplus.tdd.point
+package io.hhplus.tdd.controller
 
-import io.hhplus.tdd.point.dto.ChargePointRequest
-import io.hhplus.tdd.point.dto.UsePointRequest
+import io.hhplus.tdd.point.PointHistory
+import io.hhplus.tdd.point.UserPoint
+import io.hhplus.tdd.controller.dto.ChargePointRequest
+import io.hhplus.tdd.controller.dto.UsePointRequest
+import io.hhplus.tdd.service.PointHistoryManagementService
+import io.hhplus.tdd.service.PointManagementService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import org.slf4j.Logger
@@ -11,7 +15,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/point")
 class PointController(
-    private val pointService: PointService
+    private val pointManagementService: PointManagementService,
+    private val pointHistoryManagementService: PointHistoryManagementService,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -22,7 +27,7 @@ class PointController(
     fun point(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
     ): UserPoint {
-        return pointService.getUserPoint(id)
+        return pointManagementService.getUserPoint(id)
     }
 
     /**
@@ -32,7 +37,7 @@ class PointController(
     fun history(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
     ): List<PointHistory> {
-        return pointService.getUserPointHistory(id)
+        return pointHistoryManagementService.getUserPointHistory(id)
     }
 
     /**
@@ -43,7 +48,7 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: ChargePointRequest,
     ): UserPoint {
-        return pointService.chargeUserPoint(id, request.amount)
+        return pointManagementService.chargeUserPoint(id, request.amount)
     }
 
     /**
@@ -54,6 +59,6 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: UsePointRequest,
     ): UserPoint {
-        return pointService.useUserPoint(id, request.amount)
+        return pointManagementService.useUserPoint(id, request.amount)
     }
 }
