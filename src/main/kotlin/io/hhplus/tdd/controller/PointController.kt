@@ -1,5 +1,6 @@
 package io.hhplus.tdd.controller
 
+import io.hhplus.tdd.facade.PointFacade
 import io.hhplus.tdd.point.PointHistory
 import io.hhplus.tdd.point.UserPoint
 import io.hhplus.tdd.controller.dto.ChargePointRequest
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 class PointController(
     private val pointManagementService: PointManagementService,
     private val pointHistoryManagementService: PointHistoryManagementService,
+    private val pointFacade: PointFacade
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -48,7 +50,7 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: ChargePointRequest,
     ): UserPoint {
-        return pointManagementService.chargeUserPoint(id, request.amount)
+        return pointFacade.chargeUserPoint(id, request.amount)
     }
 
     /**
@@ -59,6 +61,6 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: UsePointRequest,
     ): UserPoint {
-        return pointManagementService.useUserPoint(id, request.amount)
+        return pointFacade.useUserPoint(id, request.amount)
     }
 }
