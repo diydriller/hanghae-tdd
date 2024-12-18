@@ -2,6 +2,8 @@ package io.hhplus.tdd.service
 
 import io.hhplus.tdd.database.UserPointTable
 import io.hhplus.tdd.point.UserPoint
+import io.hhplus.tdd.service.dto.ChargePointDto
+import io.hhplus.tdd.service.dto.UsePointDto
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -34,7 +36,7 @@ class PointManagementServiceUnitTest {
         `when`(userPointTable.insertOrUpdate(userId, initialPoints + chargeAmount)).thenReturn(updatedUserPoint)
 
         // when
-        val result = pointManagementService.chargeUserPoint(userId, chargeAmount)
+        val result = pointManagementService.chargeUserPoint(ChargePointDto(userId, chargeAmount))
 
         // then
         assertEquals(updatedUserPoint.point, result.point)
@@ -57,7 +59,7 @@ class PointManagementServiceUnitTest {
         `when`(userPointTable.insertOrUpdate(userId, initialPoints - useAmount)).thenReturn(updatedUserPoint)
 
         // when
-        val result = pointManagementService.useUserPoint(userId, useAmount)
+        val result = pointManagementService.useUserPoint(UsePointDto(userId, useAmount))
 
         // then
         assertEquals(updatedUserPoint.point, result.point)

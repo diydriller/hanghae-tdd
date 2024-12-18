@@ -1,12 +1,14 @@
 package io.hhplus.tdd.controller
 
+import io.hhplus.tdd.controller.dto.ChargePointRequest
+import io.hhplus.tdd.controller.dto.UsePointRequest
 import io.hhplus.tdd.facade.PointFacade
 import io.hhplus.tdd.point.PointHistory
 import io.hhplus.tdd.point.UserPoint
-import io.hhplus.tdd.controller.dto.ChargePointRequest
-import io.hhplus.tdd.controller.dto.UsePointRequest
 import io.hhplus.tdd.service.PointHistoryManagementService
 import io.hhplus.tdd.service.PointManagementService
+import io.hhplus.tdd.service.dto.ChargePointDto
+import io.hhplus.tdd.service.dto.UsePointDto
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import org.slf4j.Logger
@@ -50,7 +52,8 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: ChargePointRequest,
     ): UserPoint {
-        return pointFacade.chargeUserPoint(id, request.amount)
+        val chargePointDto = ChargePointDto(id, request.amount)
+        return pointFacade.chargeUserPoint(chargePointDto)
     }
 
     /**
@@ -61,6 +64,7 @@ class PointController(
         @PathVariable @Min(value = 1, message = "id must be greater than 0") id: Long,
         @RequestBody @Valid request: UsePointRequest,
     ): UserPoint {
-        return pointFacade.useUserPoint(id, request.amount)
+        val usePointDto = UsePointDto(id, request.amount)
+        return pointFacade.useUserPoint(usePointDto)
     }
 }
